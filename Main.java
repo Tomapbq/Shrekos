@@ -8,7 +8,7 @@ public class Main {
 		
 		int longueur=12;
 		int hauteur=12;
-		
+		int perimetre=1;
 		Plateau p = new Plateau(longueur, hauteur, 2);
 		
 		ArrayList<Integer> coordTresor = new ArrayList<Integer>();
@@ -18,15 +18,24 @@ public class Main {
 		ArrayList<Integer> coordHeros = new ArrayList<Integer>();
 		Hero h = new Hero(coordHeros,2,1);
 		h.positionAleatoire(longueur, hauteur, p.getPlateau());
+		while (Perimetre(coordHeros,coordTresor,perimetre)==false){
+			h.positionAleatoire(longueur, hauteur, p.getPlateau());
+		}
 		
 		ArrayList<Integer> coordZombie = new ArrayList<Integer>();
 		Zombie z = new Zombie(coordZombie,1,1);
 		z.positionAleatoire(longueur, hauteur, p.getPlateau());
+		while (Perimetre(coordZombie,coordHeros,perimetre)==false){
+			h.positionAleatoire(longueur, hauteur, p.getPlateau());
+		}
 		
 		ArrayList<Integer> coordFantome = new ArrayList<Integer>();
 		Fantome f = new Fantome(coordFantome,1,1);
 		f.positionAleatoire(longueur, hauteur, p.getPlateau());
-	
+		while (Perimetre(coordFantome,coordHeros,perimetre)==false){
+			h.positionAleatoire(longueur, hauteur, p.getPlateau());
+		}
+		
 		while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
 			System.out.println("Obstacles : \t"+p.getObstacles());
 			System.out.println("Heros : \t"+h.getCoord());
