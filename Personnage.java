@@ -1,5 +1,3 @@
-package Source;
-
 import java.util.ArrayList;
 
 public class Personnage extends Position {
@@ -8,8 +6,8 @@ public class Personnage extends Position {
 	private int vie;
 	private int attaque;
 
-	public Personnage (ArrayList<Integer> coord,int vie,int attaque) {
-		super(coord);
+	public Personnage (int x,int y, int vie,int attaque) {
+		super(x, y);
 		this.vie=vie;
 		this.attaque=attaque;
 	}

@@ -1,13 +1,11 @@
-package Source;
-
 import java.util.ArrayList;
 
 public class Fantome extends Monstre {
 
-	public Fantome(ArrayList<Integer> coord, int vie, int attaque) {
-		super(coord, vie, attaque);
+	public Fantome(int x, int y, int vie, int attaque) {
+		super(x, y, vie, attaque);
 	}
-	
+
 	public void deplacementFantome(Plateau p) {
 		ArrayList<Integer> testCoord;
 		do {

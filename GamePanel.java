@@ -1,10 +1,7 @@
-package Source;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -122,7 +119,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			g.setColor(Color.red);
 			g.setFont(new Font("Ink Free",Font.BOLD, 75));
 			FontMetrics metrics1 = getFontMetrics(g.getFont());
-			g.drawString("C'est gagné", (SCREEN_WIDTH - metrics1.stringWidth("C'est gagné"))/2, SCREEN_HEIGHT/2);
+			g.drawString("C'est gagnÃ©", (SCREEN_WIDTH - metrics1.stringWidth("C'est gagnÃ©"))/2, SCREEN_HEIGHT/2);
 		}
 		//Lose
 		else {

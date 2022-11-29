@@ -1,16 +1,14 @@
-package Source;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Monstre extends Personnage {
 
-	public Monstre(ArrayList<Integer> coord, int vie, int attaque) {
-		super(coord, vie, attaque);
+	public Monstre(int x, int y, int vie, int attaque) {
+		super(x, y, vie, attaque);
 	}
 
 	Random rand = new Random();
-	
+
 	public ArrayList<Integer> positionMonstre() {
 		int r = rand.nextInt(5);
 		String cmd = "";
