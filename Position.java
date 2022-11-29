@@ -20,6 +20,23 @@ public class Position {
 		return boule;
 	}
 
+	public boolean Perimetre(ArrayList<Integer> coord1, ArrayList<Integer> coord2,int perimetre) {
+		boolean boule=false;
+
+		for(int i =-perimetre;i<=perimetre;i++) {
+			if (coord1.get(0)==coord2.get(0)+i && coord1.get(1)==coord2.get(1))
+				boule=false;
+			if  (coord1.get(0)==coord2.get(0) && coord1.get(1)==coord2.get(1)+i)
+				boule=false;
+			if  (coord1.get(0)==coord2.get(0)+i && coord1.get(1)==coord2.get(1)+i)
+				boule=false;
+			if  (coord1.get(0)==coord2.get(0)+i && coord1.get(1)==coord2.get(1)-i)
+				boule=false;
+			else boule=true;
+		}
+		return boule;
+	}
+
 	public void positionAleatoire(int longueur, int hauteur, ArrayList<List<Integer>> plateau){
 		// le mur se positionne sur [0,1:hauteur]; [0:longueur,0], [longueur,0:hauteur], [0:longueur,hauteur]
 		ArrayList<Integer> coordAlea;
@@ -43,26 +60,26 @@ public class Position {
 		}
 		return boule;
 	}
-	
+
 	public int getX(){
 		return x;
 	}
-	
+
 	public int getY(){
 		return y;
 	}
-	
+
 	public ArrayList<Integer> getCoord(){
 		ArrayList<Integer> coord = new ArrayList<Integer>();
 		coord.add(x);
 		coord.add(y);
 		return coord;
 	}
-	
+
 	public void setX(int x){
 		this.x=x;
 	}
-	
+
 	public void setY(int y){
 		this.y=y;
 	}
@@ -71,8 +88,6 @@ public class Position {
 		setX(coord.get(0));
 		setY(coord.get(1));
 	}
-	
-	
 }
 
 

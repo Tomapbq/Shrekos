@@ -1,33 +1,33 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class Main  {
 
 	public static void main(String[] args) {
 
 		int longueur=12;
 		int hauteur=12;
 		int perimetre;
-		
+
 		Tresor t = new Tresor(hauteur-2,hauteur-2);
 		Hero h = new Hero(1,1,2,1);
-		
+
 		System.out.print("Choisir son niveau : ");
 		Scanner sca = new Scanner(System.in);
 		String cmde = sca.nextLine();
 		int niveau=Integer.valueOf(cmde);
-		
+
 		if (niveau==1) {
-			
+
 			perimetre=5;
-			
+
 			Plateau p = new Plateau(longueur, hauteur, niveau);
-			
+
 			Zombie z = new Zombie(0,0,1,1);
 			do {
 				z.positionAleatoire(longueur, hauteur, p.getPlateau());
 			} while (!(z.perimetre(h.getCoord(),perimetre)));
-			
+
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
 				System.out.println("Obstacles : \t"+p.getObstacles());
 				System.out.println("Heros : \t"+h.getCoord());
@@ -55,18 +55,18 @@ public class Main {
 				System.out.println("WIN");
 			}
 		}
-		
+
 		else if (niveau==2) {
-			
+
 			perimetre=4;
-			
+
 			Plateau p = new Plateau(longueur, hauteur, niveau);
-			
+
 			Fantome f = new Fantome(0,0,1,1);
 			do {
 				f.positionAleatoire(longueur, hauteur, p.getPlateau());
 			} while (!(f.perimetre(h.getCoord(),perimetre)));
-			
+
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
 				System.out.println("Obstacles : \t"+p.getObstacles());
 				System.out.println("Heros : \t"+h.getCoord());
@@ -92,13 +92,13 @@ public class Main {
 			if (t.getCoord().equals(h.getCoord())) {
 				System.out.println("WIN");
 			}
-			
+
 		}
-		
+
 		else if (niveau==3) {
-			
+
 			perimetre=3;
-			
+
 			Plateau p = new Plateau(longueur, hauteur, niveau);
 
 			Zombie z = new Zombie(0,0,1,1);
@@ -133,6 +133,7 @@ public class Main {
 				System.out.println();
 
 			}
+			System.out.println("Obstacles : \t"+p.getObstacles());
 			System.out.println("Heros : \t"+h.getCoord());
 			System.out.println("Zombie : \t"+z.getCoord());
 			System.out.println("Fantome : \t"+f.getCoord());
@@ -146,8 +147,8 @@ public class Main {
 				System.out.println("WIN");
 			}
 		}
-		else System.out.println("Le niveau n'existe pas");
 
+		else System.out.println("Le niveau n'existe pas");
 	}
 }
 
