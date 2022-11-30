@@ -6,6 +6,6 @@
 # Sprint 2
 - Diagramme de classes : pas avant et après sprint
 - Pas diagramme de séquence
-- Tag : Tage 3.1 et 3.2 ? on est en sprint 2 !!!!
+- Tag : Tags 3.1 et 3.2 ? on est en sprint 2 !!!!
 
 # Sprint 3
