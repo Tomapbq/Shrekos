@@ -13,17 +13,13 @@ public class GamePanel extends JPanel implements ActionListener {
 	ArrayList<List<Integer>> plateau = p.getPlateau();
 	ArrayList<List<Integer>> obstacles = p.getObstacles();
 	
-	ArrayList<Integer> coordTresor = new ArrayList<Integer>();
-	Tresor t = new Tresor(coordTresor);
+	Tresor t = new Tresor(hauteur-2,hauteur-2);
 
-	ArrayList<Integer> coordHeros = new ArrayList<Integer>();
-	Hero h = new Hero(coordHeros,2,1);
+	Hero h = new Hero(1,1,2,1);
 	
-	ArrayList<Integer> coordZombie = new ArrayList<Integer>();
-	Zombie z = new Zombie(coordZombie,1,1);
+	Zombie z = new Zombie(0,0,1,1);
 	
-	ArrayList<Integer> coordFantome = new ArrayList<Integer>();
-	Fantome f = new Fantome(coordFantome,1,1);
+	Fantome f = new Fantome(0,0,1,1);
 	
 	static final int UNIT_SIZE = 50;
 	static final int SCREEN_WIDTH = 600;
@@ -80,7 +76,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 	}
 	
-	@Override
+	//@Override
 	public void actionPerformed(ActionEvent e) {
 		if(running) {
 			checkTresor();
