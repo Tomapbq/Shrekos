@@ -5,7 +5,7 @@
 
 # Sprint 2
 - Diagramme de classes : pas avant et après sprint
-- Pas diagramme de séquence
+- Pas diagramme de séquence, il y a review de Sprint 2 mais pas restrospective
 - Tag : Tags 3.1 et 3.2 ? on est en sprint 2 !!!!
 
 # Sprint 3
