@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main  {
@@ -9,7 +10,7 @@ public class Main  {
 		int hauteur=12;
 		int perimetre;
 
-		Tresor t = new Tresor(hauteur-2,hauteur-2);
+		Tresor t = new Tresor(hauteur-2,longueur-2);
 		Hero h = new Hero(1,1,2,1);
 
 		System.out.print("Choisir son niveau : ");
@@ -24,28 +25,32 @@ public class Main  {
 			Plateau p = new Plateau(longueur, hauteur, niveau);
 
 			Zombie z = new Zombie(0,0,1,1);
-			do {
-				z.positionAleatoire(longueur, hauteur, p.getPlateau());
-			} while (!(z.perimetre(h.getCoord(),perimetre)));
+			z.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
 
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
-				System.out.println("Obstacles : \t"+p.getObstacles());
-				System.out.println("Heros : \t"+h.getCoord());
+				afficherCoord(p,h,t);
 				System.out.println("Zombie : \t"+z.getCoord());
-				System.out.println("Tresor : \t"+t.getCoord());
 				z.deplacementZombie(p.getPlateau());
 				h.deplacementHero(p.getPlateau());
+				
 				if (z.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-z.getAttaque());
-					z.setVie(z.getVie()-h.getAttaque());
+					// si le zombie n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
+					if (z.getVie()-h.getAttaque()<=0){
+						z.setX(t.getX());
+						z.setY(t.getY());
+						z.setVie(1);
+					// si il lui reste de la vie, on lui en enleve
+					} else {
+						z.setVie(z.getVie()-h.getAttaque());
+					}
 					System.out.println("Aie ta vie : \t"+h.getVie());
 				}
 				System.out.println();
-
 			}
-			System.out.println("Heros : \t"+h.getCoord());
+			
+			afficherCoord(p,h,t);
 			System.out.println("Zombie : \t"+z.getCoord());
-			System.out.println("Tresor : \t"+t.getCoord());
 
 			if (h.getVie()==0) {
 				System.out.println("GAME OVER");
@@ -63,27 +68,32 @@ public class Main  {
 			Plateau p = new Plateau(longueur, hauteur, niveau);
 
 			Fantome f = new Fantome(0,0,1,1);
-			do {
-				f.positionAleatoire(longueur, hauteur, p.getPlateau());
-			} while (!(f.perimetre(h.getCoord(),perimetre)));
+			f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
+
 
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
-				System.out.println("Obstacles : \t"+p.getObstacles());
-				System.out.println("Heros : \t"+h.getCoord());
+				afficherCoord(p,h,t);
 				System.out.println("Fantome : \t"+f.getCoord());
-				System.out.println("Tresor : \t"+t.getCoord());
 				f.deplacementFantome(p);
 				h.deplacementHero(p.getPlateau());
+				// test si coord hero et fantome =
 				if (f.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-f.getAttaque());
-					f.setVie(f.getVie()-h.getAttaque());
+					// si le fantome n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
+					if (f.getVie()-h.getAttaque()<=0){
+						f.setX(t.getX());
+						f.setY(t.getY());
+						f.setVie(1);
+					// si il lui reste de la vie, on lui en enleve
+					} else {
+						f.setVie(f.getVie()-h.getAttaque());
+					}
 					System.out.println("Aie ta vie : \t"+h.getVie());
 				}
 				System.out.println();
 			}
-			System.out.println("Heros : \t"+h.getCoord());
+			afficherCoord(p,h,t);
 			System.out.println("Fantome : \t"+f.getCoord());
-			System.out.println("Tresor : \t"+t.getCoord());
 
 			if (h.getVie()==0) {
 				System.out.println("GAME OVER");
@@ -102,42 +112,55 @@ public class Main  {
 			Plateau p = new Plateau(longueur, hauteur, niveau);
 
 			Zombie z = new Zombie(0,0,1,1);
-			do {
-				z.positionAleatoire(longueur, hauteur, p.getPlateau());
-			} while (!(z.perimetre(h.getCoord(),perimetre)));
+			z.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
+
 
 			Fantome f = new Fantome(0,0,1,1);
-			do {
-				f.positionAleatoire(longueur, hauteur, p.getPlateau());
-			} while (!(f.perimetre(h.getCoord(),perimetre)));
+			f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
+
 
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
-				System.out.println("Obstacles : \t"+p.getObstacles());
-				System.out.println("Heros : \t"+h.getCoord());
+				afficherCoord(p,h,t);
 				System.out.println("Zombie : \t"+z.getCoord());
 				System.out.println("Fantome : \t"+f.getCoord());
-				System.out.println("Tresor : \t"+t.getCoord());
-				f.deplacementFantome(p);
-				z.deplacementZombie(p.getPlateau());
+				
+				//f.deplacementFantome(p);
+				//z.deplacementZombie(p.getPlateau());
 				h.deplacementHero(p.getPlateau());
+				
 				if (z.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-z.getAttaque());
-					z.setVie(z.getVie()-h.getAttaque());
+					// si le zombie n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
+					if (z.getVie()-h.getAttaque()<=0){
+						z.setX(t.getX());
+						z.setY(t.getY());
+						z.setVie(1);
+					// si il lui reste de la vie, on lui en enleve
+					} else {
+						z.setVie(z.getVie()-h.getAttaque());
+					}
 					System.out.println("Aie ta vie : \t"+h.getVie());
 				}
+				
 				if (f.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-f.getAttaque());
-					f.setVie(f.getVie()-h.getAttaque());
+					// si le fantome n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
+					if (f.getVie()-h.getAttaque()<=0){
+						f.setX(t.getX());
+						f.setY(t.getY());
+						f.setVie(1);
+					// si il lui reste de la vie, on lui en enleve
+					} else {
+						f.setVie(f.getVie()-h.getAttaque());
+					}
 					System.out.println("Aie ta vie : \t"+h.getVie());
 				}
 				System.out.println();
-
 			}
-			System.out.println("Obstacles : \t"+p.getObstacles());
-			System.out.println("Heros : \t"+h.getCoord());
+			
+			afficherCoord(p,h,t);
 			System.out.println("Zombie : \t"+z.getCoord());
 			System.out.println("Fantome : \t"+f.getCoord());
-			System.out.println("Tresor : \t"+t.getCoord());
 
 			if (h.getVie()==0) {
 				System.out.println("GAME OVER");
@@ -149,6 +172,12 @@ public class Main  {
 		}
 
 		else System.out.println("Le niveau n'existe pas");
+	}
+	
+	static void afficherCoord(Plateau p, Hero h, Tresor t) {
+		System.out.println("Obstacles : \t"+p.getObstacles());
+		System.out.println("Tresor : \t"+t.getCoord());
+		System.out.println("Heros : \t"+h.getCoord());
 	}
 }
 

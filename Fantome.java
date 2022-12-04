@@ -4,6 +4,8 @@ public class Fantome extends Monstre {
 
 	public Fantome(int x, int y, int vie, int attaque) {
 		super(x, y, vie, attaque);
+		// on initialisera toujours la vie à 1
+		setVie(1);
 	}
 
 	public void deplacementFantome(Plateau p) {

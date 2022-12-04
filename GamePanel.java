@@ -5,52 +5,53 @@ import java.util.List;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
-	
+
 	int longueur=12;
 	int hauteur=12;
-	
+	int perimetre=5;
+	int nb_obstacles = 15;
+
+
 	Plateau p = new Plateau(longueur, hauteur, 2);
 	ArrayList<List<Integer>> plateau = p.getPlateau();
 	ArrayList<List<Integer>> obstacles = p.getObstacles();
-	
+
 	Tresor t = new Tresor(hauteur-2,hauteur-2);
 
 	Hero h = new Hero(1,1,2,1);
-	
-	Zombie z = new Zombie(0,0,1,1);
-	
-	Fantome f = new Fantome(0,0,1,1);
-	
+
+	Zombie z = new Zombie(0,0,3,1);
+
+	Fantome f = new Fantome(0,0,3,1);
+
 	static final int UNIT_SIZE = 50;
 	static final int SCREEN_WIDTH = 600;
 	static final int SCREEN_HEIGHT = 600;
 	static final int DELAY = 50;
 	static final int temps_depl_z = 1000;
 	static final int temps_depl_f = 1000;
-	int nb_obstacles = 15;
 	int time = -50;
 	boolean running = false;
 	int win = 0;
 	Timer timer;
-	
+
 	GamePanel() {
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
 		this.setBackground(Color.white);
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
-		t.positionAleatoire(longueur, hauteur, plateau);
-		h.positionAleatoire(longueur, hauteur, plateau);
-		z.positionAleatoire(longueur, hauteur, plateau);
-		f.positionAleatoire(longueur, hauteur, plateau);
+
+		z.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
+		f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
 		startGame();
 	}
-	
+
 	public void startGame() {
 		running = true;
 		timer = new Timer(DELAY,this);
 		timer.start();
 	}
-	
+
 	//@Override
 	public void actionPerformed(ActionEvent e) {
 		if(running) {
@@ -78,6 +79,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		if(running) {
 			draw_lines(g);
 			draw_obst(g);
+			draw_vie(g);
 			draw_h(g);
 			draw_t(g);
 			draw_f(g);
@@ -87,7 +89,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			gameOver(g);
 		}
 	}
-	
+
 	public class MyKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -134,6 +136,12 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 	}
 
+	public void draw_vie(Graphics g) {
+		g.setColor(Color.white);
+		g.setFont(new Font("Ink Free",Font.BOLD, 20));
+		g.drawString("Nombre de vie : "+h.getVie(), UNIT_SIZE, UNIT_SIZE*2/3);
+	}
+
 	//dessine les obstacles (et bords)
 	public void draw_obst(Graphics g) {
 		g.setColor(Color.black);
@@ -173,7 +181,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		g.setColor(Color.green);
 		g.fillOval(UNIT_SIZE*h.getX(),UNIT_SIZE*h.getY(),UNIT_SIZE,UNIT_SIZE);
 	}
-	
+
 	public void deplacementHero(ArrayList<List<Integer>> plateau, String cmd) {
 		ArrayList<Integer> tesCoord;
 		tesCoord = h.position(cmd);
@@ -181,7 +189,7 @@ public class GamePanel extends JPanel implements ActionListener {
 			h.setCoord(tesCoord);
 		}
 	}
-	
+
 	//verifie si le héros est sur le trésor
 	public void checkTresor() {
 		if (t.getCoord().equals(h.getCoord())) {
@@ -189,19 +197,27 @@ public class GamePanel extends JPanel implements ActionListener {
 			win = 1;
 		}
 	}
-	
+
 	//verifie si le heros n'as plus de vies
 	public void checkMort() {
-		if (h.getVie()==0) {
+		if (h.getVie()<=0) {
 			running = false;
 		}
 	}
-	
+
 	//verifie si le zombie touche le héros
 	public void checkTouche_z() {
 		if (z.getCoord().equals(h.getCoord())) {
 			h.setVie(h.getVie()-z.getAttaque());
-			z.setVie(z.getVie()-h.getAttaque());
+			// si le zombie n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
+			if (z.getVie()-h.getAttaque()<=0){
+				z.setX(t.getX());
+				z.setY(t.getY());
+				z.setVie(1);
+				// si il lui reste de la vie, on lui en enleve
+			} else {
+				z.setVie(z.getVie()-h.getAttaque());
+			}
 		}
 	}
 
@@ -209,7 +225,15 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void checkTouche_f() {
 		if (f.getCoord().equals(h.getCoord())) {
 			h.setVie(h.getVie()-f.getAttaque());
-			f.setVie(f.getVie()-h.getAttaque());
+			// si le fantome n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
+			if (f.getVie()-h.getAttaque()<=0){
+				f.setX(t.getX());
+				f.setY(t.getY());
+				f.setVie(1);
+				// si il lui reste de la vie, on lui en enleve
+			} else {
+				f.setVie(f.getVie()-h.getAttaque());
+			}
 		}
 	}
 }
