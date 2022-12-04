@@ -80,8 +80,8 @@ public class Plateau {
 				test.add(nb2);
 			} while (obstacles.contains(test) || pasObstacles.contains(test));
 			// on ajoute l'obstacle a la liste obstacles
-			obstacles.get(k).add(nb2);
 			obstacles.get(k).add(nb1);
+			obstacles.get(k).add(nb2);
 		}		
 
 		// tri de la liste dans l'ordre croissants des abscisses et ordonnees
