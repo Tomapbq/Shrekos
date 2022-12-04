@@ -5,16 +5,13 @@ import java.util.List;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
+	int perimetre;
+	int nb_obstacles;
+	int niveau;
 
-	int longueur=12;
-	int hauteur=12;
-	int perimetre=5;
-	int nb_obstacles = 15;
-
-
-	Plateau p = new Plateau(longueur, hauteur, 2);
-	ArrayList<List<Integer>> plateau = p.getPlateau();
-	ArrayList<List<Integer>> obstacles = p.getObstacles();
+	Plateau p;
+	ArrayList<List<Integer>> plateau;
+	ArrayList<List<Integer>> obstacles;
 
 	Tresor t = new Tresor(hauteur-2,hauteur-2);
 
@@ -30,16 +27,35 @@ public class GamePanel extends JPanel implements ActionListener {
 	static final int DELAY = 50;
 	static final int temps_depl_z = 1000;
 	static final int temps_depl_f = 1000;
-	int time = -50;
+	static final int longueur = SCREEN_WIDTH/UNIT_SIZE;
+	static final int hauteur = SCREEN_HEIGHT/UNIT_SIZE;
+	int time = -DELAY;
 	boolean running = false;
 	int win = 0;
 	Timer timer;
 
-	GamePanel() {
+	GamePanel(int niveau) {
+		this.niveau = niveau;
+		if (niveau == 1) {
+			perimetre = 5;
+			nb_obstacles = 7;
+		}
+		else if (niveau == 2) {
+			perimetre = 4;
+			nb_obstacles = 15;
+		}
+		else if (niveau == 3) {
+			perimetre = 3;
+			nb_obstacles = 20;
+		}
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT));
 		this.setBackground(Color.white);
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
+
+		p = new Plateau(longueur, hauteur, niveau);
+		plateau = p.getPlateau();
+		obstacles = p.getObstacles();
 
 		z.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
 		f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
@@ -136,10 +152,12 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 	}
 
+	//dessine les coeurs du héros
 	public void draw_vie(Graphics g) {
-		g.setColor(Color.white);
-		g.setFont(new Font("Ink Free",Font.BOLD, 20));
-		g.drawString("Nombre de vie : "+h.getVie(), UNIT_SIZE, UNIT_SIZE*2/3);
+		g.setColor(Color.red);
+		for(int i = 0;i<h.getVie();i++) {
+			g.fillOval(UNIT_SIZE*(longueur-1-i),0,UNIT_SIZE,UNIT_SIZE);
+		}
 	}
 
 	//dessine les obstacles (et bords)
