@@ -48,19 +48,27 @@ public class Position {
 		while(mouvPossible(plateau, coordAlea)==false);
 		setCoord(coordAlea);
 	}
-
+	
 	public boolean perimetre(ArrayList<Integer> coordHero,int perimetre) {
-		boolean boule=false;
-		for (int i =-perimetre;i<=perimetre;i++) {
-			if (x==coordHero.get(0)+i && y==coordHero.get(1)) boule=false;
-			if (x==coordHero.get(0) && y==coordHero.get(1)+i) boule=false;
-			if (x==coordHero.get(0)+i && y==coordHero.get(1)+i) boule=false;
-			if (x==coordHero.get(0)+i && y==coordHero.get(1)-i) boule=false;
-			else boule=true;
+		boolean boule=true;
+		for (int i=coordHero.get(0)-perimetre; i<=coordHero.get(0)+perimetre; i++) {
+			for (int j=coordHero.get(1)-perimetre; j<=coordHero.get(1)+perimetre; j++) {
+				if (x==i && y==j) boule=false;
+			}
 		}
 		return boule;
 	}
-
+	
+	public void testPositionPerimetre(ArrayList<Integer> coordHero, ArrayList<List<Integer>> plateau, int perimetre, int longueur, int hauteur) {
+		if (perimetre<=7) {
+			do {
+				positionAleatoire(longueur, hauteur, plateau);
+			} while (!(perimetre(coordHero,perimetre)));	
+		} else
+			System.out.println("Mauvaise taille de perimetre");
+			//System.exit(0);
+	}
+	
 	public int getX(){
 		return x;
 	}
