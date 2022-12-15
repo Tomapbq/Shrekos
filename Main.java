@@ -1,3 +1,5 @@
+package Source;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,7 +14,9 @@ public class Main  {
 
 		Tresor t = new Tresor(hauteur-2,longueur-2);
 		Hero h = new Hero(1,1,2,1);
-
+		
+		
+		
 		System.out.print("Choisir son niveau : ");
 		Scanner sca = new Scanner(System.in);
 		String cmde = sca.nextLine();
@@ -26,13 +30,56 @@ public class Main  {
 
 			Zombie z = new Zombie(0,0,1,1);
 			z.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
-
+			
+			int x=0;
+			int y=0;
+			Potion Potion = new Potion(x,y);
+			Potion.positionAleatoire(longueur,hauteur, p.getPlateau());
+			
+			int x1=0;
+			int y1=0;
+			Objet teleportation= new Objet(x1,y1);
+			teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+			
+			int x2=0;
+			int y2=0;
+			Objet attaque= new Objet(x2,y2);
+			attaque.positionAleatoire(longueur,hauteur, p.getPlateau());
+			System.out.println("Attaque : \t"+attaque.getCoord());
+			
+			
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
-				afficherCoord(p,h,t);
+				afficherCoord(p,h,t,Potion,teleportation);
+				System.out.println("Attaque: \t"+attaque.getCoord());
 				System.out.println("Zombie : \t"+z.getCoord());
 				z.deplacementZombie(p.getPlateau());
 				h.deplacementHero(p.getPlateau());
 				
+				if (Potion.getCoord().equals(h.getCoord())) {
+					h.setVie(h.getVie()+Potion.AugmenterVie(niveau));
+					System.out.println("Tu gagnes un bonus de vie ! Ton nombre de vie : \t"+h.getVie());
+					Potion.positionAleatoire(longueur,hauteur, p.getPlateau());
+				}
+				
+				if (teleportation.getCoord().equals(h.getCoord())) {
+					h.positionAleatoire(longueur,hauteur, p.getPlateau());
+					System.out.println("Tu as été téléporté ! Ta nouvelle case : \t"+h.getCoord());
+					teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+				}
+				
+				if (attaque.getCoord().equals(h.getCoord())) {
+					if (z.getVie()-attaque.PuissanceAtt(niveau)<=0){
+						z.setX(t.getX());
+						z.setY(t.getY());
+						z.setVie(1);
+						System.out.println("Tu as tué le zombie !");
+					// si il lui reste de la vie, on lui en enleve
+					} else {
+						z.setVie(z.getVie()-attaque.PuissanceAtt(niveau));
+						System.out.println("Le zombie perd une vie !");
+					}
+					attaque.positionAleatoire(longueur,hauteur, p.getPlateau());
+				}
 				if (z.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-z.getAttaque());
 					// si le zombie n'a plus de vie on le fait reaparaitre sur la case du tresor avec toute sa vie
@@ -49,7 +96,8 @@ public class Main  {
 				System.out.println();
 			}
 			
-			afficherCoord(p,h,t);
+			afficherCoord(p,h,t,Potion,teleportation);
+			System.out.println("Attaque: \t"+attaque.getCoord());
 			System.out.println("Zombie : \t"+z.getCoord());
 
 			if (h.getVie()==0) {
@@ -70,12 +118,53 @@ public class Main  {
 			Fantome f = new Fantome(0,0,1,1);
 			f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
 
-
+			int x=0;
+			int y=0;
+			Potion Potion = new Potion(x,y);
+			Potion.positionAleatoire(longueur,hauteur, p.getPlateau());
+						
+			int x1=0;
+			int y1=0;
+			Objet teleportation= new Objet(x1,y1);
+			teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+					
+			int x2=0;
+			int y2=0;
+			Objet attaque= new Objet(x2,y2);
+			attaque.positionAleatoire(longueur,hauteur, p.getPlateau());
+			System.out.println("Attaque : \t"+attaque.getCoord());
+			
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
-				afficherCoord(p,h,t);
+				afficherCoord(p,h,t,Potion,teleportation);
+				System.out.println("Attaque: \t"+attaque.getCoord());
 				System.out.println("Fantome : \t"+f.getCoord());
 				f.deplacementFantome(p);
 				h.deplacementHero(p.getPlateau());
+				
+				if (Potion.getCoord().equals(h.getCoord())) {
+					h.setVie(h.getVie()+Potion.AugmenterVie(niveau));
+					System.out.println("Tu gagnes un bonus de vie ! Ton nombre de vie : \t"+h.getVie());
+				}
+				
+				if (teleportation.getCoord().equals(h.getCoord())) {
+					h.positionAleatoire(longueur,hauteur, p.getPlateau());
+					System.out.println("Tu as été téléporté ! Ta nouvelle case : \t"+h.getCoord());
+					teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+				}
+				if (attaque.getCoord().equals(h.getCoord())) {
+					if (f.getVie()-attaque.PuissanceAtt(niveau)<=0){
+						f.setX(t.getX());
+						f.setY(t.getY());
+						f.setVie(1);
+						System.out.println("Tu as tué le zombie !");
+					// si il lui reste de la vie, on lui en enleve
+					} else {
+						f.setVie(f.getVie()-attaque.PuissanceAtt(niveau));
+						System.out.println("Le fantome perd une vie !");
+					}
+					attaque.positionAleatoire(longueur,hauteur, p.getPlateau());
+				}
+				
 				// test si coord hero et fantome =
 				if (f.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-f.getAttaque());
@@ -92,7 +181,8 @@ public class Main  {
 				}
 				System.out.println();
 			}
-			afficherCoord(p,h,t);
+			afficherCoord(p,h,t,Potion,teleportation);
+			System.out.println("Attaque: \t"+attaque.getCoord());
 			System.out.println("Fantome : \t"+f.getCoord());
 
 			if (h.getVie()==0) {
@@ -118,15 +208,37 @@ public class Main  {
 			Fantome f = new Fantome(0,0,1,1);
 			f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
 
-
+			int x=0;
+			int y=0;
+			Potion Potion = new Potion(x,y);
+			Potion.positionAleatoire(longueur,hauteur, p.getPlateau());
+			
+			int x1=0;
+			int y1=0;
+			Objet teleportation= new Objet(x1,y1);
+			teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+			System.out.println("case teleportation : \t"+teleportation.getCoord());
+			
+			
 			while (h.getVie()!=0 && !(t.getCoord().equals(h.getCoord()))) {
-				afficherCoord(p,h,t);
+				afficherCoord(p,h,t,Potion,teleportation);
 				System.out.println("Zombie : \t"+z.getCoord());
 				System.out.println("Fantome : \t"+f.getCoord());
 				
 				//f.deplacementFantome(p);
 				//z.deplacementZombie(p.getPlateau());
 				h.deplacementHero(p.getPlateau());
+				
+				if (Potion.getCoord().equals(h.getCoord())) {
+					h.setVie(h.getVie()+Potion.AugmenterVie(niveau));
+					System.out.println("Tu gagnes un bonus de vie ! Ton nombre de vie : \t"+h.getVie());
+				}
+				
+				if (teleportation.getCoord().equals(h.getCoord())) {
+					h.positionAleatoire(longueur,hauteur, p.getPlateau());
+					System.out.println("Tu as été téléporté ! Ta nouvelle case : \t"+h.getCoord());
+					teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+				}
 				
 				if (z.getCoord().equals(h.getCoord())) {
 					h.setVie(h.getVie()-z.getAttaque());
@@ -158,7 +270,7 @@ public class Main  {
 				System.out.println();
 			}
 			
-			afficherCoord(p,h,t);
+			afficherCoord(p,h,t,Potion,teleportation);
 			System.out.println("Zombie : \t"+z.getCoord());
 			System.out.println("Fantome : \t"+f.getCoord());
 
@@ -174,10 +286,11 @@ public class Main  {
 		else System.out.println("Le niveau n'existe pas");
 	}
 	
-	static void afficherCoord(Plateau p, Hero h, Tresor t) {
+	static void afficherCoord(Plateau p, Hero h, Tresor t,Potion Potion,Objet teleportation) {
 		System.out.println("Obstacles : \t"+p.getObstacles());
 		System.out.println("Tresor : \t"+t.getCoord());
 		System.out.println("Heros : \t"+h.getCoord());
+		System.out.println("Potion : \t"+Potion.getCoord());
+		System.out.println("Teleportation :\t"+teleportation.getCoord());
 	}
 }
-
