@@ -12,7 +12,7 @@
 - Diagramme de classes : pas avant et après sprint, question : plateau ne dépend pas des autres classes du jeu ? Collision ? Fin jeu ? 
 - Diagramme de séquence : pas correct. Les fonctions finDuJeu, perteVie ne sont pas dans le diagramme de classes, les noms de classses sont différents au diagramme de classes ? C'est quoi le getpositionHero()/getPositionMonstre ?
 - Tag : pas de tage 3.2
-- Pas préparation pour le Sprint 4
+- Pas préparation pour le Sprint 4, pas de review + retrospective de Sprint 3
 - Merci d'oraganiser bien le git
 
 
