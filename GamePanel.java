@@ -2,6 +2,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.io.*;
+import java.awt.image.*;
+import javax.imageio.*;
 import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -156,48 +160,77 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void draw_vie(Graphics g) {
 		g.setColor(Color.red);
 		for(int i = 0;i<h.getVie();i++) {
-			g.fillOval(UNIT_SIZE*(longueur-1-i),0,UNIT_SIZE,UNIT_SIZE);
+			g.fillOval(UNIT_SIZE*(longueur-1-i),0,30,30);
+			g.fillOval(UNIT_SIZE*(longueur-1-i)+20,0,30,30);
+			int[] x = {UNIT_SIZE*(longueur-1-i)+UNIT_SIZE/2,UNIT_SIZE*(longueur-1-i)+UNIT_SIZE-5,UNIT_SIZE*(longueur-1-i)+UNIT_SIZE/2,UNIT_SIZE*(longueur-1-i)+5};
+			int[] y = {5,UNIT_SIZE/2,UNIT_SIZE-5,UNIT_SIZE/2};
+			g.fillPolygon(x,y,4);
 		}
 	}
 
 	//dessine les obstacles (et bords)
 	public void draw_obst(Graphics g) {
-		g.setColor(Color.black);
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/mur.jpg"));
+		}
+		catch(IOException e) {
+		}
 		for(int i=0;i<nb_obstacles;i++) {
-			g.fillRect(UNIT_SIZE*obstacles.get(i).get(0),UNIT_SIZE*obstacles.get(i).get(1),UNIT_SIZE,UNIT_SIZE);
+			g.drawImage(image,UNIT_SIZE*obstacles.get(i).get(0),UNIT_SIZE*obstacles.get(i).get(1),UNIT_SIZE,UNIT_SIZE,null);
 		}
 		for(int i=0;i<longueur;i++) {
-			g.fillRect(UNIT_SIZE*i,0,UNIT_SIZE,UNIT_SIZE);
-			g.fillRect(UNIT_SIZE*i,UNIT_SIZE*(hauteur-1),UNIT_SIZE,UNIT_SIZE);
+			g.drawImage(image,UNIT_SIZE*i,0,UNIT_SIZE,UNIT_SIZE,null);
+			g.drawImage(image,UNIT_SIZE*i,UNIT_SIZE*(hauteur-1),UNIT_SIZE,UNIT_SIZE,null);
 		}
 		for(int i=0;i<hauteur;i++) {
-			g.fillRect(0,UNIT_SIZE*i,UNIT_SIZE,UNIT_SIZE);
-			g.fillRect(UNIT_SIZE*(longueur-1),UNIT_SIZE*i,UNIT_SIZE,UNIT_SIZE);
+			g.drawImage(image,0,UNIT_SIZE*i,UNIT_SIZE,UNIT_SIZE,null);
+			g.drawImage(image,UNIT_SIZE*(longueur-1),UNIT_SIZE*i,UNIT_SIZE,UNIT_SIZE,null);
 		}
 	}
 
 	//dessine le zombie
 	public void draw_z(Graphics g) {
-		g.setColor(Color.red);
-		g.fillOval(UNIT_SIZE*z.getX(),UNIT_SIZE*z.getY(),UNIT_SIZE,UNIT_SIZE);
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/zombie.png"));
+		}
+		catch(IOException e) {
+		} 
+		g.drawImage(image,UNIT_SIZE*z.getX()+5,UNIT_SIZE*z.getY(),40,UNIT_SIZE,null);
 	}
 
 	//dessine le fantome
 	public void draw_f(Graphics g) {
-		g.setColor(Color.gray);
-		g.fillOval(UNIT_SIZE*f.getX(),UNIT_SIZE*f.getY(),UNIT_SIZE,UNIT_SIZE);
-	}
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/fantome.png"));
+		}
+		catch(IOException e) {
+		}
+		g.drawImage(image,UNIT_SIZE*f.getX(),UNIT_SIZE*f.getY(),UNIT_SIZE,UNIT_SIZE,null);
+	} 
 
 	//dessine le trésor
 	public void draw_t(Graphics g) {
-		g.setColor(Color.yellow);
-		g.fillOval(UNIT_SIZE*t.getX(),UNIT_SIZE*t.getY(),UNIT_SIZE,UNIT_SIZE);
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/tresor.png"));
+		}
+		catch(IOException e) {
+		}
+		g.drawImage(image,UNIT_SIZE*t.getX(),UNIT_SIZE*t.getY(),UNIT_SIZE,UNIT_SIZE,null);
 	}
 
 	//dessine le héros
 	public void draw_h(Graphics g) {
-		g.setColor(Color.green);
-		g.fillOval(UNIT_SIZE*h.getX(),UNIT_SIZE*h.getY(),UNIT_SIZE,UNIT_SIZE);
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/hero.png"));
+		}
+		catch(IOException e) {
+		}
+		g.drawImage(image,UNIT_SIZE*h.getX(),UNIT_SIZE*h.getY(),UNIT_SIZE,UNIT_SIZE,null);
 	}
 
 	public void deplacementHero(ArrayList<List<Integer>> plateau, String cmd) {
