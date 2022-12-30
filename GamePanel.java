@@ -25,12 +25,19 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	Fantome f = new Fantome(0,0,3,1);
 
+	Potion Potion = new Potion(0,0);
+	Boolean potion_v = true;
+
+	Objet Teleportation = new Objet(0,0);
+
+	Objet Attaque = new Objet(0,0);
+
 	static final int UNIT_SIZE = 50;
 	static final int SCREEN_WIDTH = 600;
 	static final int SCREEN_HEIGHT = 600;
 	static final int DELAY = 50;
-	static final int temps_depl_z = 1000;
-	static final int temps_depl_f = 1000;
+	static final int temps_depl_z = 700;
+	static final int temps_depl_f = 800;
 	static final int longueur = SCREEN_WIDTH/UNIT_SIZE;
 	static final int hauteur = SCREEN_HEIGHT/UNIT_SIZE;
 	int time = -DELAY;
@@ -63,6 +70,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		z.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
 		f.testPositionPerimetre(h.getCoord(), p.getPlateau(), perimetre, longueur, hauteur);
+		Potion.positionAleatoire(longueur,hauteur, p.getPlateau());
+		Teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+		Attaque.positionAleatoire(longueur,hauteur, p.getPlateau());
 		startGame();
 	}
 
@@ -77,6 +87,8 @@ public class GamePanel extends JPanel implements ActionListener {
 		if(running) {
 			checkTresor();
 			checkMort();
+			checkTeleporteur();
+			checkAttaque();
 			if (time % temps_depl_f == 0) {
 				f.deplacementFantome(p);
 				checkTouche_f();
@@ -84,6 +96,9 @@ public class GamePanel extends JPanel implements ActionListener {
 			if (time % temps_depl_f == 0) {
 				z.deplacementZombie(p.getPlateau());
 				checkTouche_z();
+			}
+			if (potion_v) {
+				checkPotion();
 			}
 			time += DELAY;
 		}
@@ -100,10 +115,15 @@ public class GamePanel extends JPanel implements ActionListener {
 			draw_lines(g);
 			draw_obst(g);
 			draw_vie(g);
-			draw_h(g);
 			draw_t(g);
 			draw_f(g);
 			draw_z(g);
+			draw_att(g);
+			if (potion_v) {
+				draw_pot(g);
+			}
+			draw_tel(g);
+			draw_h(g);
 		}
 		else {
 			gameOver(g);
@@ -197,7 +217,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 		catch(IOException e) {
 		} 
-		g.drawImage(image,UNIT_SIZE*z.getX()+5,UNIT_SIZE*z.getY(),40,UNIT_SIZE,null);
+		g.drawImage(image,UNIT_SIZE*z.getX()+5,UNIT_SIZE*z.getY(),UNIT_SIZE-10,UNIT_SIZE,null);
 	}
 
 	//dessine le fantome
@@ -231,6 +251,39 @@ public class GamePanel extends JPanel implements ActionListener {
 		catch(IOException e) {
 		}
 		g.drawImage(image,UNIT_SIZE*h.getX(),UNIT_SIZE*h.getY(),UNIT_SIZE,UNIT_SIZE,null);
+	}
+
+	//dessine la potion
+	public void draw_pot(Graphics g) {
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/potion.png"));
+		}
+		catch(IOException e) {
+		}
+		g.drawImage(image,UNIT_SIZE*Potion.getX(),UNIT_SIZE*Potion.getY(),UNIT_SIZE,UNIT_SIZE,null);
+	}
+
+	//dessine le portail
+	public void draw_tel(Graphics g) {
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/portail.png"));
+		}
+		catch(IOException e) {
+		}
+		g.drawImage(image,UNIT_SIZE*Teleportation.getX(),UNIT_SIZE*Teleportation.getY()+5,UNIT_SIZE,UNIT_SIZE-10,null);
+	}
+
+	//dessine Attaque
+	public void draw_att(Graphics g) {
+		BufferedImage image = null;
+		try {
+			 image = ImageIO.read(new File("Images/attaque.png"));
+		}
+		catch(IOException e) {
+		}
+		g.drawImage(image,UNIT_SIZE*Attaque.getX(),UNIT_SIZE*Attaque.getY(),UNIT_SIZE,UNIT_SIZE,null);
 	}
 
 	public void deplacementHero(ArrayList<List<Integer>> plateau, String cmd) {
@@ -285,6 +338,35 @@ public class GamePanel extends JPanel implements ActionListener {
 			} else {
 				f.setVie(f.getVie()-h.getAttaque());
 			}
+		}
+	}
+
+	//verifie si le heros prend la potion
+	public void checkPotion() {
+		if (Potion.getCoord().equals(h.getCoord())) {
+			h.setVie(h.getVie()+Potion.AugmenterVie(niveau));
+			potion_v = false;
+		}
+	}
+
+	//verifie si le heros est sur le teleporteur
+	public void checkTeleporteur() {
+		if (Teleportation.getCoord().equals(h.getCoord())) {
+			h.positionAleatoire(longueur,hauteur, p.getPlateau());
+			Teleportation.positionAleatoire(longueur,hauteur, p.getPlateau());
+		}
+	}
+
+	//verifie si le heros est sur une attaque
+	public void checkAttaque() {
+		if (Attaque.getCoord().equals(h.getCoord())) {
+			f.setVie(f.getVie()-Attaque.PuissanceAtt(niveau));
+			if (f.getVie()<=0) {
+				f.setX(t.getX());
+				f.setY(t.getY());
+				f.setVie(1);
+			}
+			Attaque.positionAleatoire(longueur,hauteur, p.getPlateau());
 		}
 	}
 }
